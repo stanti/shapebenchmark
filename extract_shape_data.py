@@ -29,4 +29,5 @@ for c in range(0, sheet.ncols):
 				break
 
 			assert(column[i].ctype == 2)
-			f.write("%d %f\n" % (i, column[i].value))
+			f.write("%d N %f\n" % (i, column[i].value))
+
