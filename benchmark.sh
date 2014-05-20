@@ -5,26 +5,30 @@ set -e
 rnafold=~/ViennaRNA/src/bin/RNAfold
 rnapvmin=~/ViennaRNA/src/bin/RNApvmin
 
-mkdir -p benchmarkdata
+#optional data extraction step (preprocessing of shapeknots data)
+if [[ "$*" == *--extract* ]]
+then
+	mkdir -p benchmarkdata
 
-cp 3rdparty/shapeknots/sequences_ct_files/*.ct benchmarkdata/
+	cp 3rdparty/shapeknots/sequences_ct_files/*.ct benchmarkdata/
 
-mv "benchmarkdata/5domain16S rRNA, E. coli.ct"       "benchmarkdata/5' domain of 16S rRNA, E. coli.ct"
-mv "benchmarkdata/5domain16S rRNA, H. volcanii.ct"   "benchmarkdata/5' domain of 16S rRNA, H. volcanii.ct"
-mv "benchmarkdata/5domain23S rRNA, E. coli.ct"       "benchmarkdata/5' domain of 23S rRNA, E. coli.ct"
-mv "benchmarkdata/Group I intron, Azoarcus sp.ct"    "benchmarkdata/Group I intron, Azoarcus sp..ct"
-mv "benchmarkdata/Lysine_riboswitch, T. martima.ct"  "benchmarkdata/Lysine riboswitch, T. maritime.ct"
-mv "benchmarkdata/Mbox_riboswitch, B. subtilis.ct"   "benchmarkdata/M-Box riboswitch, B. subtilis.ct"
-mv "benchmarkdata/PreQ1_riboswitch, B. subtilis.ct"  "benchmarkdata/Pre-Q1 riboswitch, B. subtilis.ct"
+	#rename some files (sequences in the xls document sometimes have slightly different names)
+	mv "benchmarkdata/5domain16S rRNA, E. coli.ct"       "benchmarkdata/5' domain of 16S rRNA, E. coli.ct"
+	mv "benchmarkdata/5domain16S rRNA, H. volcanii.ct"   "benchmarkdata/5' domain of 16S rRNA, H. volcanii.ct"
+	mv "benchmarkdata/5domain23S rRNA, E. coli.ct"       "benchmarkdata/5' domain of 23S rRNA, E. coli.ct"
+	mv "benchmarkdata/Group I intron, Azoarcus sp.ct"    "benchmarkdata/Group I intron, Azoarcus sp..ct"
+	mv "benchmarkdata/Lysine_riboswitch, T. martima.ct"  "benchmarkdata/Lysine riboswitch, T. maritime.ct"
+	mv "benchmarkdata/Mbox_riboswitch, B. subtilis.ct"   "benchmarkdata/M-Box riboswitch, B. subtilis.ct"
+	mv "benchmarkdata/PreQ1_riboswitch, B. subtilis.ct"  "benchmarkdata/Pre-Q1 riboswitch, B. subtilis.ct"
 
-head -n -1 < "benchmarkdata/5domain16S rRNA, H. volcanii.ct" > 
-rm "benchmarkdata/5domain16S rRNA, H. volcanii.ct"
+	./extract_shape_data.py 3rdparty/shapeknots/ShapeKnots_SNRNASM.xlsx benchmarkdata
 
-./extract_shape_data.py 3rdparty/shapeknots/ShapeKnots_SNRNASM.xlsx benchmarkdata
+	#remove last reactivity value since the number of reactivity exceeds the sequence length
+	head -n -1 "benchmarkdata/5' domain of 16S rRNA, H. volcanii.shape" > temp.txt ; mv temp.txt "benchmarkdata/5' domain of 16S rRNA, H. volcanii.shape"
+fi
 
-head -n -1 "benchmarkdata/5' domain of 16S rRNA, H. volcanii.shape" > temp.txt ; mv temp.txt "benchmarkdata/5' domain of 16S rRNA, H. volcanii.shape"
 
-
+#predict mfe structure and pairing probability matrices for all sequences using RNAfold and various SHAPE methods
 mkdir -p predictions
 
 for rna in benchmarkdata/*.fa
@@ -51,6 +55,8 @@ do
 	rm *.ps
 done
 
+
+#rate predictions and create plots
 mkdir -p results
 
 ./compare_sequences.py predictions benchmarkdata results
@@ -60,7 +66,5 @@ do
 	awk -F'\t' -f transpose.awk < results/$n.csv > results/t$n.csv
 	./plot.R results/t$n.csv results/$n.svg results/${n}_diff.svg $n
 done
-
-
 
 
