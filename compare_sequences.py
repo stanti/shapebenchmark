@@ -146,7 +146,7 @@ for name,description in allnames.iteritems():
 		dataSens.append(calculateSensitivity(reference, result))
 		dataPpv.append(calculatePPV(reference, result))
 
-		dataDiv.append(lines[-1].strip().split(' ')[-1])
+		dataDiv.append(float(lines[-1].strip().split(' ')[-1]) / len(db))
 
 	outSens.append([description, len(db)] + dataSens)
 	outPpv.append([description, len(db)] + dataPpv)
