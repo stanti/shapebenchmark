@@ -38,20 +38,20 @@ then
 		name=`echo $rna | sed 's/.[^.]*$//' | sed 's|benchmarkdata/||'`
 
 		echo "$name - RNAfold"
-		$rnafold -p --bppmThreshold=1e-15 < "benchmarkdata/$name.fa" > "predictions/$name.R.out"
+		$rnafold -p --bppmThreshold=1e-15 --MEA < "benchmarkdata/$name.fa" > "predictions/$name.R.out"
 		mv *_dp.ps "predictions/$name.R.ps"
 
 		echo "$name - Deigan"
-		$rnafold -p --bppmThreshold=1e-15 "--shape=benchmarkdata/$name.shape" --shapeMethod=D < "benchmarkdata/$name.fa" > "predictions/$name.D.out"
+		$rnafold -p --bppmThreshold=1e-15 --MEA "--shape=benchmarkdata/$name.shape" --shapeMethod=D < "benchmarkdata/$name.fa" > "predictions/$name.D.out"
 		mv *_dp.ps "predictions/$name.D.ps"
 
 		echo "$name - Zarringhalam"
-		$rnafold -p --bppmThreshold=1e-15 "--shape=benchmarkdata/$name.shape" --shapeMethod=Z < "benchmarkdata/$name.fa" > "predictions/$name.Z.out"
+		$rnafold -p --bppmThreshold=1e-15 --MEA "--shape=benchmarkdata/$name.shape" --shapeMethod=Z < "benchmarkdata/$name.fa" > "predictions/$name.Z.out"
 		mv *_dp.ps "predictions/$name.Z.ps"
 
 		echo "$name - Washietl"
 		$rnapvmin "benchmarkdata/$name.shape" < "benchmarkdata/$name.fa" > "predictions/$name.W.pv"
-		$rnafold -p --bppmThreshold=1e-15 "--shape=predictions/$name.W.pv" --shapeMethod=W < "benchmarkdata/$name.fa" > "predictions/$name.W.out"
+		$rnafold -p --bppmThreshold=1e-15 --MEA "--shape=predictions/$name.W.pv" --shapeMethod=W < "benchmarkdata/$name.fa" > "predictions/$name.W.out"
 		mv *_dp.ps "predictions/$name.W.ps"
 
 		rm *.ps
@@ -64,7 +64,7 @@ mkdir -p results
 
 ./compare_sequences.py predictions benchmarkdata results
 
-for n in sens ppv prob div
+for n in mfesens mfeppv measens meappv prob div
 do
 	awk -F'\t' -f transpose.awk < results/$n.csv > results/t$n.csv
 	./plot.R results/t$n.csv results/$n.svg results/${n}_diff.svg $n

@@ -74,8 +74,10 @@ allnames = {"PreQ1_riboswitch_B._subtilis": "Pre-Q1 riboswitch, B. subtilis *",
             "5domain16S_rRNA_E.coli": "5' domain of 16S rRNA, E. coli"}
 '''
 
-outSens = []
-outPpv = []
+outMfeSens = []
+outMfePpv = []
+outMeaSens = []
+outMeaPpv = []
 outProb = []
 outDiv = []
 
@@ -94,8 +96,10 @@ for name,description in allnames.iteritems():
 				if j != 0 and not j in reference:
 					reference[i] = j
 
-	dataSens = []
-	dataPpv = []
+	dataMfeSens = []
+	dataMfePpv = []
+	dataMeaSens = []
+	dataMeaPpv = []
 	dataProb = []
 	dataDiv = []
 
@@ -133,19 +137,27 @@ for name,description in allnames.iteritems():
 		lines = f.readlines()
 		f.close()
 
-		db = lines[2].split(' ')[0]
-		result = dotBracket2Pairs(db)
-		dataSens.append(calculateSensitivity(reference, result))
-		dataPpv.append(calculatePPV(reference, result))
+		mfe = lines[2].split(' ')[0]
+		result = dotBracket2Pairs(mfe)
+		dataMfeSens.append(calculateSensitivity(reference, result))
+		dataMfePpv.append(calculatePPV(reference, result))
 
-		dataDiv.append(float(lines[-1].strip().split(' ')[-1]) / len(db))
+		assert('MEA' in lines[-2])
+		mea = lines[-2].split(' ')[0]
+		result = dotBracket2Pairs(mea)
+		dataMeaSens.append(calculateSensitivity(reference, result))
+		dataMeaPpv.append(calculatePPV(reference, result))
 
-	outSens.append([description, len(db)] + dataSens)
-	outPpv.append([description, len(db)] + dataPpv)
-	outProb.append([description, len(db)] + dataProb)
-	outDiv.append([description, len(db)] + dataDiv)
+		dataDiv.append(float(lines[-1].strip().split(' ')[-1]) / len(mfe))
 
-out = { "sens": outSens, "ppv": outPpv, "prob": outProb, "div": outDiv}
+	outMfeSens.append([description, len(mfe)] + dataMfeSens)
+	outMfePpv.append([description, len(mfe)] + dataMfePpv)
+	outMeaSens.append([description, len(mfe)] + dataMeaSens)
+	outMeaPpv.append([description, len(mfe)] + dataMeaPpv)
+	outProb.append([description, len(mfe)] + dataProb)
+	outDiv.append([description, len(mfe)] + dataDiv)
+
+out = {"mfesens": outMfeSens, "mfeppv": outMfePpv, "measens": outMeaSens, "meappv": outMeaPpv, "prob": outProb, "div": outDiv}
 
 for name,data in out.iteritems():
 	f = open(os.path.join(outdir, name + ".csv"), "w")
