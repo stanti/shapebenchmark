@@ -64,7 +64,7 @@ mkdir -p results
 
 ./compare_sequences.py predictions benchmarkdata results
 
-for n in mfesens mfeppv measens meappv prob div
+for n in mfesens mfeppv measens meappv prob ensemblediv structurediv
 do
 	awk -F'\t' -f transpose.awk < results/$n.csv > results/t$n.csv
 	./plot.R results/t$n.csv results/$n.svg results/${n}_diff.svg $n

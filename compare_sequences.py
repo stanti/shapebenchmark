@@ -79,7 +79,8 @@ outMfePpv = []
 outMeaSens = []
 outMeaPpv = []
 outProb = []
-outDiv = []
+outEnsembleDiv = []
+outStructureDiv = []
 
 for name,description in allnames.iteritems():
 	sys.stderr.write(name+ "\n")
@@ -101,9 +102,29 @@ for name,description in allnames.iteritems():
 	dataMeaSens = []
 	dataMeaPpv = []
 	dataProb = []
-	dataDiv = []
+	dataEnsembleDiv = []
+	dataStructureDiv = []
 
 	for type in ['R', 'D', 'Z', 'W']:
+		f = open(os.path.join(resultdir, name + '.' + type + '.out'))
+		lines = f.readlines()
+		f.close()
+
+		mfe = lines[2].split(' ')[0]
+		result = dotBracket2Pairs(mfe)
+		dataMfeSens.append(calculateSensitivity(reference, result))
+		dataMfePpv.append(calculatePPV(reference, result))
+
+		assert('MEA' in lines[-2])
+		mea = lines[-2].split(' ')[0]
+		result = dotBracket2Pairs(mea)
+		dataMeaSens.append(calculateSensitivity(reference, result))
+		dataMeaPpv.append(calculatePPV(reference, result))
+
+		length = len(mfe)
+		dataEnsembleDiv.append(float(lines[-1].strip().split(' ')[-1]) / length)
+
+
 		probs = {}
 		f = open(os.path.join(resultdir, name + '.' + type + '.ps'))
 		for line in f:
@@ -133,31 +154,26 @@ for name,description in allnames.iteritems():
 
 		dataProb.append(sum(values)/len(values))
 
-		f = open(os.path.join(resultdir, name + '.' + type + '.out'))
-		lines = f.readlines()
-		f.close()
+		structureDiversity = 0.
+		for i in range(1, len(mfe) + 1):
+			for j in range(i+1, len(mfe) + 1):
+				prob = probs[i][j] if i in probs and j in probs[i] else 0
+				if i in reference and reference[i] == j:
+					structureDiversity += 1-prob
+				else:
+					structureDiversity += prob
 
-		mfe = lines[2].split(' ')[0]
-		result = dotBracket2Pairs(mfe)
-		dataMfeSens.append(calculateSensitivity(reference, result))
-		dataMfePpv.append(calculatePPV(reference, result))
+		dataStructureDiv.append(structureDiversity/length)
 
-		assert('MEA' in lines[-2])
-		mea = lines[-2].split(' ')[0]
-		result = dotBracket2Pairs(mea)
-		dataMeaSens.append(calculateSensitivity(reference, result))
-		dataMeaPpv.append(calculatePPV(reference, result))
+	outMfeSens.append([description, length] + dataMfeSens)
+	outMfePpv.append([description, length] + dataMfePpv)
+	outMeaSens.append([description, length] + dataMeaSens)
+	outMeaPpv.append([description, length] + dataMeaPpv)
+	outProb.append([description, length] + dataProb)
+	outEnsembleDiv.append([description, length] + dataEnsembleDiv)
+	outStructureDiv.append([description, length] + dataStructureDiv)
 
-		dataDiv.append(float(lines[-1].strip().split(' ')[-1]) / len(mfe))
-
-	outMfeSens.append([description, len(mfe)] + dataMfeSens)
-	outMfePpv.append([description, len(mfe)] + dataMfePpv)
-	outMeaSens.append([description, len(mfe)] + dataMeaSens)
-	outMeaPpv.append([description, len(mfe)] + dataMeaPpv)
-	outProb.append([description, len(mfe)] + dataProb)
-	outDiv.append([description, len(mfe)] + dataDiv)
-
-out = {"mfesens": outMfeSens, "mfeppv": outMfePpv, "measens": outMeaSens, "meappv": outMeaPpv, "prob": outProb, "div": outDiv}
+out = {"mfesens": outMfeSens, "mfeppv": outMfePpv, "measens": outMeaSens, "meappv": outMeaPpv, "prob": outProb, "ensemblediv": outEnsembleDiv, "structurediv": outStructureDiv}
 
 for name,data in out.iteritems():
 	f = open(os.path.join(outdir, name + ".csv"), "w")
