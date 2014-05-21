@@ -38,14 +38,6 @@ def calculatePPV(validated, predicted):
   return countCorrectPredictions(validated, predicted) / len(predicted) if len(predicted) else 0
 
 
-
-def geomean(numbers):
-  product = 1
-  for n in numbers:
-    product *= n
-  return product ** (1.0/len(numbers))
-
-
 #resultfiles = os.listdir(refdir)
 #names = sorted(set([x[0:-5] for x in resultfiles]))
 
@@ -135,7 +127,7 @@ for name,description in allnames.iteritems():
 			else:
 				values.append(0)
 
-		dataProb.append(geomean(values))
+		dataProb.append(sum(values)/len(values))
 
 		f = open(os.path.join(resultdir, name + '.' + type + '.out'))
 		lines = f.readlines()
