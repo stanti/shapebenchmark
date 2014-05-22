@@ -32,26 +32,27 @@ fi
 if [[ "$*" != *--skipfolding* ]]
 then
 	mkdir -p predictions
+	mkdir -p runtime
 
 	for rna in benchmarkdata/*.fa
 	do
 		name=`echo $rna | sed 's/.[^.]*$//' | sed 's|benchmarkdata/||'`
 
 		echo "$name - RNAfold"
-		$rnafold -p --bppmThreshold=1e-15 --MEA < "benchmarkdata/$name.fa" > "predictions/$name.R.out"
+		/usr/bin/time -f %e -o "runtime/$name.R.time" $rnafold -p --bppmThreshold=1e-15 --MEA < "benchmarkdata/$name.fa" > "predictions/$name.R.out"
 		mv *_dp.ps "predictions/$name.R.ps"
 
 		echo "$name - Deigan"
-		$rnafold -p --bppmThreshold=1e-15 --MEA "--shape=benchmarkdata/$name.shape" --shapeMethod=D < "benchmarkdata/$name.fa" > "predictions/$name.D.out"
+		/usr/bin/time -f %e -o "runtime/$name.D.time" $rnafold -p --bppmThreshold=1e-15 --MEA "--shape=benchmarkdata/$name.shape" --shapeMethod=D < "benchmarkdata/$name.fa" > "predictions/$name.D.out"
 		mv *_dp.ps "predictions/$name.D.ps"
 
 		echo "$name - Zarringhalam"
-		$rnafold -p --bppmThreshold=1e-15 --MEA "--shape=benchmarkdata/$name.shape" --shapeMethod=Z < "benchmarkdata/$name.fa" > "predictions/$name.Z.out"
+		/usr/bin/time -f %e -o "runtime/$name.Z.time" $rnafold -p --bppmThreshold=1e-15 --MEA "--shape=benchmarkdata/$name.shape" --shapeMethod=Z < "benchmarkdata/$name.fa" > "predictions/$name.Z.out"
 		mv *_dp.ps "predictions/$name.Z.ps"
 
 		echo "$name - Washietl"
-		$rnapvmin "benchmarkdata/$name.shape" < "benchmarkdata/$name.fa" > "predictions/$name.W.pv"
-		$rnafold -p --bppmThreshold=1e-15 --MEA "--shape=predictions/$name.W.pv" --shapeMethod=W < "benchmarkdata/$name.fa" > "predictions/$name.W.out"
+		/usr/bin/time -f %e -o "runtime/$name.P.time" $rnapvmin "benchmarkdata/$name.shape" < "benchmarkdata/$name.fa" > "predictions/$name.W.pv"
+		/usr/bin/time -f %e -o "runtime/$name.W.time" $rnafold -p --bppmThreshold=1e-15 --MEA "--shape=predictions/$name.W.pv" --shapeMethod=W < "benchmarkdata/$name.fa" > "predictions/$name.W.out"
 		mv *_dp.ps "predictions/$name.W.ps"
 
 		rm *.ps
