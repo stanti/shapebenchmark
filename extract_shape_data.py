@@ -29,5 +29,10 @@ for c in range(0, sheet.ncols):
 				break
 
 			assert(column[i].ctype == 2)
-			f.write("%d N %f\n" % (i, column[i].value))
+			v = column[i].value
+
+			if v < -500:
+				continue
+
+			f.write("%d N %f\n" % (i, v if v > 0 else 0))
 
