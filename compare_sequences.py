@@ -38,14 +38,7 @@ def calculatePPV(validated, predicted):
   return countCorrectPredictions(validated, predicted) / len(predicted) if len(predicted) else 0
 
 
-#resultfiles = os.listdir(refdir)
-#names = sorted(set([x[0:-5] for x in resultfiles]))
-
-#print resultfiles
 names = [x[0:-3] for x in filter(lambda x: x.endswith('.fa'), os.listdir(refdir))]
-allnames = {}
-for n in names:
-	allnames[n] = n
 
 '''
 allnames = {"PreQ1_riboswitch_B._subtilis": "Pre-Q1 riboswitch, B. subtilis *",
@@ -74,6 +67,8 @@ allnames = {"PreQ1_riboswitch_B._subtilis": "Pre-Q1 riboswitch, B. subtilis *",
             "5domain16S_rRNA_E.coli": "5' domain of 16S rRNA, E. coli"}
 '''
 
+pseudoknots = ["Fluoride riboswitch, P. syringae", "Group II intron, O. iheyensis", "Group I intron, Azoarcus sp.", "Group I Intron, T. thermophila", "Hepatitis C virus IRES domain", "HIV-1 5' pseudoknot domain", "Lysine riboswitch, T. maritime", "Pre-Q1 riboswitch, B. subtilis", "RNase P, B. subtilis.ct", "SAM I riboswitch, T. tengcongensis", "SARS corona virus pseudoknot", "Telomerase pseudoknot, human"]
+
 outMfeSens = []
 outMfePpv = []
 outMeaSens = []
@@ -82,8 +77,12 @@ outProb = []
 outEnsembleDiv = []
 outStructureDiv = []
 
-for name,description in allnames.iteritems():
+for name in names:
 	sys.stderr.write(name+ "\n")
+
+	description = name
+	if name in pseudoknots:
+		description += '*'
 
 	reference = {}
 
