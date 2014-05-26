@@ -56,6 +56,16 @@ then
 		mv *_dp.ps "predictions/$name.W.ps"
 
 		rm *.ps
+
+		if [[ "$*" == *--foldingperformance* ]]
+			for n in 0 1 2 3 4 5 6 7 8 9
+			do
+				/usr/bin/time -f %e -o "runtime/$name.R.time$n" $rnafold -p --bppmThreshold=1e-15 --MEA < "benchmarkdata/$name.fa" > /dev/null
+				/usr/bin/time -f %e -o "runtime/$name.D.time$n" $rnafold -p --bppmThreshold=1e-15 --MEA "--shape=benchmarkdata/$name.shape" --shapeMethod=D < "benchmarkdata/$name.fa" > /dev/null
+				/usr/bin/time -f %e -o "runtime/$name.Z.time$n" $rnafold -p --bppmThreshold=1e-15 --MEA "--shape=benchmarkdata/$name.shape" --shapeMethod=Z < "benchmarkdata/$name.fa" > /dev/null
+				/usr/bin/time -f %e -o "runtime/$name.W.time$n" $rnafold -p --bppmThreshold=1e-15 --MEA "--shape=predictions/$name.W.pv" --shapeMethod=W < "benchmarkdata/$name.fa" > /dev/null
+			done
+		fi
 	done
 fi
 
