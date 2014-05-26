@@ -58,6 +58,7 @@ then
 		rm *.ps
 
 		if [[ "$*" == *--foldingperformance* ]]
+		then
 			for n in 0 1 2 3 4 5 6 7 8 9
 			do
 				/usr/bin/time -f %e -o "runtime/$name.R.time$n" $rnafold -p --bppmThreshold=1e-15 --MEA < "benchmarkdata/$name.fa" > /dev/null
