@@ -67,7 +67,7 @@ allnames = {"PreQ1_riboswitch_B._subtilis": "Pre-Q1 riboswitch, B. subtilis *",
             "5domain16S_rRNA_E.coli": "5' domain of 16S rRNA, E. coli"}
 '''
 
-pseudoknots = ["Fluoride riboswitch, P. syringae", "Group II intron, O. iheyensis", "Group I intron, Azoarcus sp.", "Group I Intron, T. thermophila", "Hepatitis C virus IRES domain", "HIV-1 5' pseudoknot domain", "Lysine riboswitch, T. maritime", "Pre-Q1 riboswitch, B. subtilis", "RNase P, B. subtilis.ct", "SAM I riboswitch, T. tengcongensis", "SARS corona virus pseudoknot", "Telomerase pseudoknot, human"]
+pseudoknots = ["Fluoride riboswitch, P. syringae", "Group II intron, O. iheyensis", "Group I intron, Azoarcus sp.", "Group I Intron, T. thermophila", "Hepatitis C virus IRES domain", "HIV-1 5' pseudoknot domain", "Lysine riboswitch, T. maritime", "Pre-Q1 riboswitch, B. subtilis", "RNase P, B. subtilis", "SAM I riboswitch, T. tengcongensis", "SARS corona virus pseudoknot", "Telomerase pseudoknot, human"]
 
 outMfeSens = []
 outMfePpv = []
