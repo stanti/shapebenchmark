@@ -63,8 +63,9 @@ then
 				/usr/bin/time -f %e -o "runtime/$name.D.time$n" $rnafold -p --bppmThreshold=1e-15 --MEA "--shape=benchmarkdata/$name.shape" --shapeMethod=D < "benchmarkdata/$name.fa" > /dev/null
 				/usr/bin/time -f %e -o "runtime/$name.Z.time$n" $rnafold -p --bppmThreshold=1e-15 --MEA "--shape=benchmarkdata/$name.shape" --shapeMethod=Z < "benchmarkdata/$name.fa" > /dev/null
 				/usr/bin/time -f %e -o "runtime/$name.W.time$n" $rnafold -p --bppmThreshold=1e-15 --MEA "--shape=predictions/$name.W.pv" --shapeMethod=W < "benchmarkdata/$name.fa" > /dev/null
-				/usr/bin/time -f %e -o "runtime/$name.S.time" $rnapvmin "benchmarkdata/$name.shape" --sampleSize=10000 < "benchmarkdata/$name.fa" > /dev/null 2> /dev/null
 			done
+
+			/usr/bin/time -f %e -o "runtime/$name.S.time" $rnapvmin "benchmarkdata/$name.shape" --sampleSize=10000 < "benchmarkdata/$name.fa" > /dev/null
 		fi
 
 		rm *.ps
