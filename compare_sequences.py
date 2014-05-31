@@ -137,6 +137,7 @@ for name in names:
 			i = int(components[0])
 			j = int(components[1])
 			prob = float(components[2])
+			prob *= prob
 
 			if i in probs:
 				probs[i][j] = prob
