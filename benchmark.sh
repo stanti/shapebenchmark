@@ -84,4 +84,6 @@ do
 	./plot.R results/t$n.csv results/$n.svg results/${n}_diff.svg $n
 done
 
+./extract_runtime.py runtime benchmarkdata > results/runtime.csv
+./plot_runtime.R results/runtime.csv results/runtime_folding.pdf results/runtime_vector.pdf
 
