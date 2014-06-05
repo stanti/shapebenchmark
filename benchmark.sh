@@ -22,9 +22,6 @@ then
 	mv "benchmarkdata/PreQ1_riboswitch, B. subtilis.ct"  "benchmarkdata/Pre-Q1 riboswitch, B. subtilis.ct"
 
 	./extract_shape_data.py 3rdparty/shapeknots/ShapeKnots_SNRNASM.xlsx benchmarkdata
-
-	#remove last reactivity value since the number of reactivity exceeds the sequence length
-	head -n -1 "benchmarkdata/5' domain of 16S rRNA, H. volcanii.shape" > temp.txt ; mv temp.txt "benchmarkdata/5' domain of 16S rRNA, H. volcanii.shape"
 fi
 
 
