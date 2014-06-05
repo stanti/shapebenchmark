@@ -38,10 +38,14 @@ for c in range(0, sheet.ncols):
 			assert(column[i].ctype == 2)
 			v = column[i].value
 
-			if v < -500: #values lower than -500 are treated as missing by RNAstructure
-				continue
 			if i-1 >= len(sequence): #unfortunately one sequence in the SHAPE data set has more reactivities than nucleotides :-/
 				continue
 
-			f.write("%d %s %g\n" % (i, sequences[name][i-1], v if v > 0 else 0)) #values between -500 and 0 will be mapped to 0 (same handling as RNAstructure)
+			f.write("%d %s" % (i, sequences[name][i-1]))
 
+			#ensure same handling as RNAstructure:
+			#values lower than -500 are treated as missing
+			#values between -500 and 0 are mapped to 0
+			if v >= -500:
+				f.write(' %g' % (v if v > 0 else 0))
+			f.write('\n')
