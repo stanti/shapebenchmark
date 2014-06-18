@@ -40,33 +40,6 @@ def calculatePPV(validated, predicted):
 
 names = [x[0:-3] for x in filter(lambda x: x.endswith('.fa'), os.listdir(refdir))]
 
-'''
-allnames = {"PreQ1_riboswitch_B._subtilis": "Pre-Q1 riboswitch, B. subtilis *",
-            "Telomerase_pseudoknot_human": "Telomerase pseudoknot, human *",
-            "Fluoride_riboswitch_P.syringae": "Fluoride riboswitch, P. syringae *",
-            "Adenine_riboswitch_V.vulnificus": "Adenine riboswitch, V. vulnificus",
-            "tRNA_asp_yeast": "tRNA(aps), yeast",
-            "tRNA_phe_E._coli": "tRNA(phe), E. coli",
-            "TPP_riboswitch_E.coli": "TPP riboswitch, E. coli",
-            "SARS_corona_virus_pseudoknot": "SARS corona virus pseudoknot *",
-            "cyclic-di-GMP_riboswitch_V.cholerae": "cyclic-di-GMP riboswitch, V. cholerae",
-            "SAM_I_riboswitch_T.tengcongensis": "SAM I riboswitch, T. tengcongensis *",
-            "5S_rRNA_E.coli": "5S rRNA, E. coli",
-            "Mbox_riboswitch_B._subtilis": "M-Box riboswitch, B. subtilis",
-            "P546_domain_bI3_group_I_intron": "p546 domain, bI3 group I intron",
-            "Lysine_riboswitch_T._martima": "Lysine riboswitch, T. martimia *",
-            "Group_I_intron_Azoarcus_sp": "Group I intron, Azoarcus sp. *",
-            "Signal_recognition_particle_RNA_human": "Signal recognition particle, human", #XX
-            "Hepatitis_C_virus_IRES_domain": "Hepatitis C virus, IRES domain *",
-            "RNase_P_B.subtilis": "RNase P, B. subtilis *", #XX
-            "Group_II_intron_O.iheyensis": "Group II intron, O. iheyensis *",
-            "Group_I_Intron_T.thermophila": "Group I intron, T. thermophilia *",
-            "5domain16S_rRNA_H.volcanii": "5' domain of 23S rRNA, H. volcanii",
-            "HIV-1_5prime_pseudoknot_domain": "HIV-1 5' pseudoknot domain *",
-            "5domain23S_rRNA_E.coli": "5' domain of 23S rRNA, E. coli",
-            "5domain16S_rRNA_E.coli": "5' domain of 16S rRNA, E. coli"}
-'''
-
 pseudoknots = ["Fluoride riboswitch, P. syringae", "Group II intron, O. iheyensis", "Group I intron, Azoarcus sp.", "Group I Intron, T. thermophila", "Hepatitis C virus IRES domain", "HIV-1 5' pseudoknot domain", "Lysine riboswitch, T. maritime", "Pre-Q1 riboswitch, B. subtilis", "RNase P, B. subtilis", "SAM I riboswitch, T. tengcongensis", "SARS corona virus pseudoknot", "Telomerase pseudoknot, human"]
 
 outMfeSens = []
