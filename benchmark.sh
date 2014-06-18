@@ -2,12 +2,17 @@
 
 set -e
 
-rnafold=~/ViennaRNA/src/bin/RNAfold
-rnapvmin=~/ViennaRNA/src/bin/RNApvmin
+rnafold=RNAfold
+rnapvmin=RNApvmin
+
+echo "Checking program versions..."
+$rnafold --version
+$rnapvmin --version
 
 #optional data extraction step (preprocessing of shapeknots data)
 if [[ "$*" == *--extract* ]]
 then
+	echo "Extracting benchmark data..."
 	mkdir -p benchmarkdata
 
 	cp 3rdparty/shapeknots/sequences_ct_files/*.ct benchmarkdata/
@@ -28,6 +33,7 @@ fi
 #predict mfe structure and pairing probability matrices for all sequences using RNAfold and various SHAPE methods
 if [[ "$*" != *--skipfolding* ]]
 then
+	echo "Folding..."
 	mkdir -p predictions
 	mkdir -p runtime
 
@@ -67,8 +73,7 @@ then
 	done
 fi
 
-
-#rate predictions and create plots
+echo "Analyzing results..."
 mkdir -p results
 
 ./compare_sequences.py predictions benchmarkdata results
